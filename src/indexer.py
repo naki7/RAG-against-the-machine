@@ -30,9 +30,44 @@ def ingest() -> dict[str, Any]:
         for file in temp:
             print(file, " - ", temp[file][:10])
 
+    return results
+
+
+def md_chunker(raw_data: dict[str, str], size: int) -> dict[str, Any]:
+    pass
+
+
+def py_chunker(raw_data: dict[str, str], size: int) -> dict[str, Any]:
+    pass
+
+
+def txt_chunker(raw_data: dict[str, str], size: int) -> dict[str, Any]:
+    pass
+
+
+def chunker(raw_data: dict[str, Any], size: int) -> dict[str, Any]:
+    results = []
+
+    for file_type in raw_data:
+        if file_type == 'md':
+            results.append(md_chunker(raw_data[file_type], size))
+        elif file_type == 'py':
+            results.append(py_chunker(raw_data[file_type], size))
+        elif file_type == 'txt':
+            results.append(txt_chunker(raw_data[file_type], size))
+        else:
+            raise ValueError("File type does not match process.")
+
+    return results
+
 
 def main() -> None:
-    ingest()
+    raw_data = ingest()
+    size = None
+    if size is None:
+        size = 2000
+    chunks = chunker(raw_data, size)
+    print(chunks)
 
 
 if __name__ == "__main__":
