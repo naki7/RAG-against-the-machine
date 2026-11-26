@@ -107,7 +107,14 @@ def py_chunker(content: str, size: int) -> int:
 
 
 def txt_chunker(raw_data: str, size: int) -> int:
-    pass
+    i = size - 1
+
+    while raw_data[i - 4: i] != '\n\n' and i > 1:
+        i -= 1
+    if raw_data[i - 4: i] == '\n\n':
+        return i
+    else:
+        return size
 
 
 def main_chunker(file_type: str, raw_data: list[str, str],
@@ -152,9 +159,12 @@ def main() -> None:
     # if raw_data.get('md') is not None:
     #     for file in raw_data['md']:
     #         chunks.append(main_chunker('md', [file, raw_data['md'][file]], size))
-    if raw_data.get('py') is not None:
-        for file in raw_data['py']:
-            chunks.append(main_chunker('py', [file, raw_data['py'][file]], size))
+    # if raw_data.get('py') is not None:
+    #     for file in raw_data['py']:
+    #         chunks.append(main_chunker('py', [file, raw_data['py'][file]], size))
+    if raw_data.get('txt') is not None:
+        for file in raw_data['txt']:
+            chunks.append(main_chunker('txt', [file, raw_data['txt'][file]], size))
     # act_len = len("# Security Policy\n\n## Reporting security issues\n\nPlease report security issues privately using [the vulnerability submission form](https://github.com/vllm-project/vllm/security/advisories/new).\n\n## Issue triage\n\nReports will then be triaged by the [vulnerability management team](https://docs.vllm.ai/en/latest/contributing/vulnerability_management.html).\n\n## Threat model\n\nPlease see the [Security Guide in the vLLM documentation](https://docs.vllm.ai/en/latest/usage/security.html) for more information on vLLM's security assumptions and recommendations.\n\nPlease see [PyTorch's Security Policy](https://github.com/pytorch/pytorch/blob/main/SECURITY.md) for more information and recommendations on how to securely interact with models.\n\n## Issue severity\n\nWe will determine the risk of each issue, taking into account our experience dealing with past issues, versions affected, common defaults, and use cases. We use the following severity categories:\n\n### CRITICAL Severity\n\nVulnerabilities that allow remote attackers to execute arbitrary code, take full control of the system, or significantly compromise confidentiality, integrity, or availability without any interaction or privileges needed, examples include remote code execution via network, deserialization issues that allow exploit chains. Generally those issues which are rated as CVSS  ≥\u202f9.0.\n\n### HIGH Severity\n\nSerious security flaws that allow elevated impact—like RCE in specific, limited contexts or significant data loss—but require advanced conditions or some trust, examples include RCE in advanced deployment modes (e.g. multi-node), or high impact issues where some sort of privileged network access is required. These issues typically have CVSS scores between 7.0 and 8.9\n\n### MODERATE Severity\n\nVulnerabilities that cause denial of service or partial disruption, but do not allow arbitrary code execution or data breach and have limited impact. These issues have a CVSS rating between 4.0 and 6.9\n\n### LOW Severity\n\nMinor iss")
     # print(act_len)
     # print(chunks[0][0], chunks[0][1])
@@ -162,12 +172,17 @@ def main() -> None:
     for chunk in chunks:
         for i in range(0, len(chunk)):
             print(len(chunk), chunk[i]['path'], len(chunk[i]['content']), chunk[i]['start_i'], chunk[i]['end_i'])
-    # check_len = 0
-    # for chunk in chunks[1]:
-    #     # print(chunk['content'])
-    #     check_len += len(chunk['content'])
-    # print(check_len)
-    # print(len(raw_data['py']['data/raw/vllm-0.10.1/setup.py']))
+            # if chunk[i]['path'] == 'data/raw/vllm-0.10.1/benchmarks/sonnet.txt':
+            #     (chunk[i]['content'])
+    print(len(raw_data['txt']['data/raw/vllm-0.10.1/benchmarks/sonnet.txt']))
+    print(len(raw_data['txt']['data/raw/vllm-0.10.1/benchmarks/multi_turn/requirements.txt']))
+    # for file in raw_data['txt']:
+    #     try:
+    #         print(file)
+    #         print(raw_data['txt'][file].index('\n\n',))
+    #     except ValueError:
+    #         print('none')
+    # print(raw_data['txt']['data/raw/vllm-0.10.1/CMakeLists.txt'])
 
 if __name__ == "__main__":
     main()
